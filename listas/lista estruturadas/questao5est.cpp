@@ -42,7 +42,7 @@ int main()
 
     sum += day;
 
-    if (month > 3 && (year % 400 == 0 || (year % 4 == 0 && year % 100 == 0)))
+    if (month > 3 && (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)))
         sum++;
 
     cout << "O numero de dias desde o inicio do ano eh: " << sum << endl;
