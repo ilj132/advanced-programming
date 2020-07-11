@@ -5,14 +5,11 @@ combinação existente de notas (R$ 100, 50, 20, 10, 5 e 2) para esse valor. */
 
 using namespace std;
 
-int contanotas(int &v, int q)
+int contanotas(unsigned &v, unsigned q)
 {
-  unsigned n;
-  while (v > 1)
-  {
-    n = v / q;
-    v %= q;
-  }
+  unsigned n = 0;
+  n = v / q;
+  v %= q;
   return n;
 }
 
@@ -37,6 +34,19 @@ int main()
   not5 = contanotas(value, 5);
   not2 = contanotas(value, 2);
 
-  cout << value << " " << not100 << endl;
+  cout << "Cedulas de R$ 100: " << not100 << endl;
+  cout << "Cedulas de R$ 50: " << not50 << endl;
+  cout << "Cedulas de R$ 20: " << not20 << endl;
+  cout << "Cedulas de R$ 10: " << not10 << endl;
+  cout << "Cedulas de R$ 5: " << not5 << endl;
+  cout << "Cedulas de R$ 2: " << not2 << endl;
+  cout << "TOTAL: " << 100 * not100 + 50 * not50 + 20 * not20 + 10 * not10 + 5 * not5 + 2 * not2 << endl;
+
+  if (value != 0)
+  {
+    cerr << "Houve um problema com esse algoritmo!\n";
+    cerr << "Veja que fica faltando R$ " << value << " para completar o valor total!!\n";
+    cerr << "Voce pode tentar encontrar e corrigir o erro?\n";
+  }
   return 0;
 }
