@@ -41,5 +41,8 @@ int main()
 
     cout << "A media dos valores digitados eh: " << media << endl;
 
+    if (arr != NULL)
+        delete[] arr;
+
     return 0;
 }
