@@ -54,7 +54,7 @@ int main()
     return 0;
   }
 
-  cout << dif(arr) << endl;
+  cout << "A diferenca entre a media de numeros e o menor numero eh: " << dif(arr) << endl;
 
   if (arr != NULL)
     delete[] arr;
