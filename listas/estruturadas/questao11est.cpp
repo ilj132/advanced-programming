@@ -41,6 +41,7 @@ int main()
     for (unsigned i = 0; i < n; i++)
         cout << " " << array[i];
     cout << endl;
+
     if (array != NULL)
         delete[] array;
 }
