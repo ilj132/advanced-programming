@@ -21,8 +21,8 @@ void leMatriz(Matriz &M);
 void imprimeMatriz(const Matriz &M);
 
 //Operacoes com matrizes
-//Matriz somaMatrizes(const Matriz &M1, const Matriz &M2);
-//Matriz somadigMatrizes(const Matriz &M1, const Matriz &M2);
+Matriz somaMatrizes(const Matriz &M1, const Matriz &M2);
+Matriz somadigMatrizes(const Matriz &M1, const Matriz &M2);
 Matriz produtoMatrizes(const Matriz &M1, const Matriz &M2);
 
 int main()
@@ -55,7 +55,9 @@ int main()
     cout << "Matriz B:\n";
     leMatriz(B);
 
-    /*C = somaMatrizes(A, B);
+    cout << endl;
+
+    C = somaMatrizes(A, B);
     cout << "Soma de A+B:\n";
     imprimeMatriz(C);
 
@@ -64,7 +66,10 @@ int main()
 
     C = somadigMatrizes(A, B);
     cout << "Soma da diagonal de A+B:\n";
-    imprimeMatriz(C);*/
+    imprimeMatriz(C);
+
+    cout << endl
+         << endl;
 
     C = produtoMatrizes(A, B);
     cout << "Produto AxB:\n";
@@ -143,6 +148,50 @@ void imprimeMatriz(const Matriz &M)
             cout << M.x[i][j] << ' ';
         cout << endl;
     }
+}
+
+Matriz somaMatrizes(const Matriz &M1, const Matriz &M2)
+{
+    Matriz prov;
+    if (M1.NL == 0 || M1.NC == 0 || M2.NL != M1.NC || M2.NC == 0)
+    {
+        cerr << "Matrizes de dimensoes invalidas. Nao podem ser somadas. \n";
+        prov.NL = prov.NC = 0;
+        prov.x = NULL;
+        return prov;
+    }
+    prov = novaMatriz(M1.NL, M2.NC);
+    for (unsigned i = 0; i < prov.NL; i++)
+    {
+        for (unsigned j = 0; j < prov.NC; j++)
+        {
+            prov.x[i][j] = M1.x[i][j] + M2.x[i][j];
+        }
+    }
+    return prov;
+}
+
+Matriz somadigMatrizes(const Matriz &M1, const Matriz &M2)
+{
+    Matriz prov;
+    if (M1.NL == 0 || M1.NC == 0 || M2.NL != M1.NC || M2.NC == 0)
+    {
+        cerr << "Matrizes de dimensoes invalidas. Nao podem ter as diagonais somadas. \n";
+        prov.NL = prov.NC = 0;
+        prov.x = NULL;
+        return prov;
+    }
+
+    prov = novaMatriz(M1.NL, M2.NC);
+    for (unsigned i = 0; i < prov.NL; i++)
+    {
+        for (unsigned j = 0; j < prov.NC; j++)
+        {
+            if (i == j)
+                prov.x[i][j] = M1.x[i][j] + M2.x[i][j];
+        }
+    }
+    return prov;
 }
 
 Matriz produtoMatrizes(const Matriz &M1, const Matriz &M2)
