@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1601781035 source:/home/isaac-lyra/Documents/estudos/university/2020.1(2020.6) semester/advanced programming/projects/poly class/Poly-main.cpp
+	<iostream>
+	<cstring>
+	"Poly.h"
+
+1601780092 /home/isaac-lyra/Documents/estudos/university/2020.1(2020.6) semester/advanced programming/projects/poly class/Poly.h
+	<iostream>
+
+1601783645 source:/home/isaac-lyra/Documents/estudos/university/2020.1(2020.6) semester/advanced programming/projects/poly class/Poly.cpp
+	<iostream>
+	<cmath>
+	"Poly.h"
+
