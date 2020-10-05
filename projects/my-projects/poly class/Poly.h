@@ -34,18 +34,24 @@ public:
 
     /// Metodos de Consulta
     inline unsigned getGrau() const {return grau;}
-    //inline double getCoef(unsigned i) const {return x[i];}
-    //double getValor(double valor){};
+    double getCoef(unsigned Num) const;
+    double getValor(double Num) const;
 
+    inline double operator[](unsigned Num) const { return getCoef(Num); }
+    inline double operator()(double Num) const { return getValor(Num); }
 
+    ///Outros metodos
+    void setGrau(unsigned Num);
+    void setCoef(unsigned Num);
 
-    ///OPERAÇÕES
     // Soma de Polinomio
     Poly operator+(const Poly &P) const;
     // Subtracao de Polinomio (- binario)
     Poly operator-(const Poly &P) const;
     // Negativo de um Polinomio (- unario)
     Poly operator-() const;
+    //multiplicacao
+    Poly operator*(const Poly &P) const;
 };
 
 #endif

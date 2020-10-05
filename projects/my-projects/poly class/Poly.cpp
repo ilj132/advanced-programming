@@ -2,7 +2,10 @@
 #include <cmath>
 #include "Poly.h"
 
-///Construtores e destrutores
+
+
+///CONSTRUTORES E DESTRUTORES
+
 void Poly::clean()
 {
     if (x != NULL)
@@ -14,6 +17,7 @@ void Poly::clean()
 void Poly::create(unsigned Num)
 {
     grau = Num;
+
     x = (grau >= 0 ? new double[grau+1] : NULL);
 }
 
@@ -27,14 +31,17 @@ void Poly::copy(const Poly &P)
 Poly::Poly(unsigned Num)
 {
     create(Num);
-
-    for (unsigned i = 0; i <= grau; i++)
-        x[i] = 0.0;
+    if(grau == 0) x[0]=0.0;
+    else{
+        x[grau]=1;
+        for (int i = grau-1; i >= 0; i--)
+            x[i] = 0.0;
+        }
 }
 
 
 
-///Sobrecarga de Operadores
+///SOBRECARGA DE OPERADORES
 
 void Poly::operator=(const Poly &P)
 {
@@ -55,7 +62,7 @@ void Poly::operator=(const Poly &P)
     }
 }
 
-/// Negativo de um vetor (- unario)
+
 Poly Poly::operator-() const
 {
     Poly prov(grau);
@@ -64,55 +71,38 @@ Poly Poly::operator-() const
     return prov;
 }
 
-/*/// Metodo de consulta que retorna o valor de um elemento do vetor
-/// Este metodo eh chamado quando o [] aparece no lado direito de uma operacao
-/// Por exemplo, y = x[2] ou cout << x[2]
-double Poly::operator[](unsigned i) const
-{
-    if (i >= N)
-    {
-        cerr << "Indice invalido\n";
-        return 0.0;
-    }
-    return x[i];
-}
 
-/// Metodo de consulta que retorna uma referencia para um elemento do vetor
-/// Este metodo eh chamado quando o [] aparece no lado esquerdo de uma operacao
-/// Por exemplo, x[2] = 7.0 ou cin >> x[2]
-double &Poly::operator[](unsigned i)
-{
-    static double prov = 0.0;
-    if (i >= N)
-    {
-        cerr << "Indice invalido\n";
-        return prov;
-    }
-    return x[i];
-}*/
-
-
-///Entrada e saída de dados
 ostream &operator<<(ostream &X, const Poly &P){
-    int i = P.grau;
-    do{
-        if(i==P.grau)  X<<P.x[i]<<"*x^"<<i;
-        else if(i==1){
-            if(P.x[i]>0){ X<<"+"<<P.x[i]<<"*x";}
-            else{X<<P.x[i]<<"*x";}
+    if(P.getGrau()==0)
+    {
+        X<<P.x[0];
+        return X;
+    }
+    else if(P.x[P.grau] !=1 && P.x[P.grau]!=0){
+        X<<P.x[P.grau];
+        if(P.grau > 1) X<<"*x^"<<P.grau;
+        else X<<"*x";
+    }
+    else{
+        if(P.grau > 1) X<<"x^"<<P.grau;
+        else X<<"x";
+    }
+
+    for(int i=P.grau-1; i>=0 ; i--)
+    {
+        if(P.x[i]!=0){
+            if(P.x[i]>0) X<<"+"<<P.x[i];
+            else if(P.x[i]<0) X<<P.x[i];
+
+            if(i==1) X<<"*x";
+            else if(i!=0){
+                X<<"*x^"<<i;
+            }
         }
-        else if(i==0){
-            if(P.x[i]>0){ X<<"+"<<P.x[i];}
-            else{X<<P.x[i];}
-        }
-        else{
-            if(P.x[i]>0){ X<<"+"<<P.x[i]<<"*x^"<<i;}
-            else { X<<P.x[i]<<"*x^"<<i;}
-        }
-            i--;
-    }while(i>=0);
+    }
     return X;
 }
+
 
 istream &operator>>(istream &X, Poly &P)
 {
@@ -123,87 +113,77 @@ istream &operator>>(istream &X, Poly &P)
     return X;
 }
 
-/*double getValor (double valor){
-    prov = 0.0;
-    for(unsigned i=0 ; i<P.grau ; i++)
-        prov+= x[i] * valor;
-    return prov;
 
-}*/
-
-/// Soma de vetores
 Poly Poly::operator+(const Poly &P) const
 {
     if (grau != P.grau)
     {
-        unsigned grauprov = (grau > P.grau? grau : P.grau);
-        unsigned menorgrau= (grau > P.grau? P.grau : grau);
-        Poly prov(grauprov);
-        for(int i=0;i<menorgrau;i++) prov.x[i] = x[i] + P.x[i];
-        for(int i=menorgrau;i<=grauprov;i++) prov.x[i] = x[i] + P.x[i];
-
-        return prov;
+       int graumaior = (grau>P.grau? grau : P.grau);
+       Poly prov(graumaior);
+       prov.x[prov.getGrau()]=0.0;
+       for(int i = graumaior ; i>= 0 ; i--) prov.x[i] = getCoef(i)+P.getCoef(i);
+       return prov;
     }
-    else{
+    else
+    {
         Poly prov(grau);
+        prov.x[prov.getGrau()]=0.0;
         for (unsigned i = 0; i <= grau; i++)
             prov.x[i] = x[i] + P.x[i];
         return prov;
     }
 }
 
-/*/// Subtracao de vetores (- binario)
+
 Poly Poly::operator-(const Poly &P) const
 {
    if (grau != P.grau)
     {
-        unsigned grauprov = (grau > P.grau? grau : P.grau);
-        Poly prov(grauprov);
-        for(int i=0;i<=prov.grau;i++) prov.x[i] = x[i] - P.x[i];
-        return prov;
+       int graumaior = (grau>P.grau? grau : P.grau);
+       Poly prov(graumaior);
+       for(int i = graumaior ; i>= 0 ; i--) prov.x[i] = getCoef(i)-P.getCoef(i);
+       return prov;
     }
-    else{
+    else
+    {
         Poly prov(grau);
         for (unsigned i = 0; i <= grau; i++)
             prov.x[i] = x[i] - P.x[i];
         return prov;
     }
-}*/
-
-/*/// Norma euclidiana de um vetor
-double Poly::norma() const
-{
-    double soma(0.0);
-    for (unsigned i = 0; i < N; i++)
-        soma += x[i] * x[i];
-    return sqrt(soma);
 }
 
-/// Produto escalar
-double Poly::escalar(const Poly &V) const
-{
-    if (N != V.N)
-    {
-        cerr << "Dimensoes incompativeis\n";
-        return 0.0;
+
+Poly Poly::operator*(const Poly &P) const {
+
+    Poly prov(grau+P.grau);
+    prov.x[prov.getGrau()] = 0.0;
+    for(int i=0; i<=getGrau(); i++){
+        for(int j=0; j<=P.getGrau(); j++){
+            prov.x[i+j] += (getCoef(i)*P.getCoef(j));
+        }
     }
-    double prov(0.0);
-    for (unsigned i = 0; i < N; i++)
-        prov += x[i] * V.x[i];
     return prov;
 }
 
-/// Produto vetorial (apenas para vetores de dimensao 3)
-Poly Poly::vetorial(const Poly &V) const
-{
-    if (N != 3 || N != V.N)
-    {
-        cerr << "Dimensoes incompativeis\n";
-        return Poly();
+
+
+///METODOS
+
+double Poly::getValor(double Num) const{
+    double valor=0.0;
+    for(int i = getGrau(); i>=0 ; i--) valor += getCoef(i)*pow(Num,i);
+    return valor;
+}
+
+
+double Poly::getCoef(unsigned Num) const {
+    static double prov = 0.0;
+    if(Num <= grau){
+        return x[Num];
     }
-    Poly prov(3);
-    prov.x[0] = x[1] * V.x[2] - x[2] * V.x[1];
-    prov.x[1] = x[2] * V.x[0] - x[0] * V.x[2];
-    prov.x[2] = x[0] * V.x[1] - x[1] * V.x[0];
-    return prov;
-}*/
+    else{
+        return prov;
+    }
+}
+

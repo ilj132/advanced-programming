@@ -50,24 +50,24 @@ int main(void)
       break;
     case '+':
       result = P1+P2;
-      break;/*
+      break;
     case '-':
       result = P1-P2;
       break;
     case '*':
       result = P1*P2;
-      break;
+      break;/*
     case '/':
       result = P1/P2;
       break;
     case '%':
       result = P1%P2;
       break;*/
-    /*case 'x':
+    case 'x':
       cout << "Valor de x: ";
       cin >> x;
       cout << "P2(x) = " << P2(x) << endl;
-      break;*/
+      break;
     case 'i':
       P2 = -P2;
       break;
