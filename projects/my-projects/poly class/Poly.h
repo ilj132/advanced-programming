@@ -41,8 +41,9 @@ public:
     inline double operator()(double Num) const { return getValor(Num); }
 
     ///Outros metodos
-    void setGrau(unsigned Num);
-    void setCoef(unsigned Num);
+    void setCoef(unsigned i, double Num);
+    Poly setGrau(unsigned Num);
+    bool testeNulo() const;
 
     // Soma de Polinomio
     Poly operator+(const Poly &P) const;
@@ -50,7 +51,7 @@ public:
     Poly operator-(const Poly &P) const;
     // Negativo de um Polinomio (- unario)
     Poly operator-() const;
-    //multiplicacao
+    //Multiplicacao de polinomios
     Poly operator*(const Poly &P) const;
 };
 

@@ -73,30 +73,55 @@ Poly Poly::operator-() const
 
 
 ostream &operator<<(ostream &X, const Poly &P){
-    if(P.getGrau()==0)
+    if(P.getGrau()==0 || P.testeNulo())
     {
         X<<P.x[0];
         return X;
     }
+
     else if(P.x[P.grau] !=1 && P.x[P.grau]!=0){
         X<<P.x[P.grau];
         if(P.grau > 1) X<<"*x^"<<P.grau;
         else X<<"*x";
     }
-    else{
+
+    else if(P.x[P.grau]!=0){
         if(P.grau > 1) X<<"x^"<<P.grau;
         else X<<"x";
     }
 
     for(int i=P.grau-1; i>=0 ; i--)
     {
-        if(P.x[i]!=0){
-            if(P.x[i]>0) X<<"+"<<P.x[i];
-            else if(P.x[i]<0) X<<P.x[i];
 
-            if(i==1) X<<"*x";
+        if(P.x[i]!=0){
+            //coloca os coeficientes positivos
+            if(P.x[i]>0){
+                if(P.x[i]!=1)  X<<"+"<<P.x[i];
+                else if(i==0){
+                    X<<"+"<<P.x[i];
+                }
+                else{
+                    X<<"+";
+                }
+            }
+            //coloca os coeficientes negativos
+            else if(P.x[i]<0){
+                if(P.x[i]!=(-1)) X<<P.x[i];
+                else if(i==0){
+                    X<<P.x[i];
+                }
+                else{
+                    X<<"-";
+                }
+            }
+            //coloca os x
+            if(i==1){
+                if(P.x[i]!=1 && P.x[i]!=(-1)) X<<"*x";
+                else{ X<<"x";}
+            }
             else if(i!=0){
-                X<<"*x^"<<i;
+                if(P.x[i]!=1 && P.x[i]!=(-1)) X<<"*x^"<<i;
+                else{ X<<"x^"<<i;}
             }
         }
     }
@@ -106,7 +131,18 @@ ostream &operator<<(ostream &X, const Poly &P){
 
 istream &operator>>(istream &X, Poly &P)
 {
-    for(int i= P.grau; i>=0; i--){
+    double teste = 0.0;
+    do{
+        cout<<"x^"<<P.getGrau()<<": ";
+        X>>teste;
+        if(teste==0.0 && P.getGrau()>0)
+            cout<<endl<<"COEFICIENTE INVALIDO - Entre com um valor diferente de 0 para o coeficiente de maior grau"<<endl;
+
+        else
+            P.x[P.getGrau()]=teste;
+    }while(teste==0.0 && P.getGrau()>0);
+
+    for(int i= P.getGrau()-1; i>=0; i--){
         cout<<"x^"<<i<<": ";
         X >> P.x[i];
     }
@@ -118,16 +154,14 @@ Poly Poly::operator+(const Poly &P) const
 {
     if (grau != P.grau)
     {
-       int graumaior = (grau>P.grau? grau : P.grau);
+       int graumaior = (getGrau()>P.getGrau()? getGrau() : P.getGrau());
        Poly prov(graumaior);
-       prov.x[prov.getGrau()]=0.0;
        for(int i = graumaior ; i>= 0 ; i--) prov.x[i] = getCoef(i)+P.getCoef(i);
        return prov;
     }
     else
     {
         Poly prov(grau);
-        prov.x[prov.getGrau()]=0.0;
         for (unsigned i = 0; i <= grau; i++)
             prov.x[i] = x[i] + P.x[i];
         return prov;
@@ -187,3 +221,27 @@ double Poly::getCoef(unsigned Num) const {
     }
 }
 
+
+void Poly::setCoef(unsigned i, double Num){
+    if(i<=grau || Num == 0.0 && i!=grau ){
+        x[i]=Num;
+    }
+    else{
+        cout<<"COEFICIENTE INVÁLIDO";
+    }
+}
+
+
+Poly Poly::setGrau(unsigned Num)
+{
+    clean();
+    Poly prov(Num);
+    return prov;
+}
+
+bool Poly::testeNulo() const {
+    double soma = 0.0;
+    for(int i=getGrau(); i>=0 ; i--) soma+=getCoef(i);
+    if(soma == 0) return true;
+    return false;
+}
