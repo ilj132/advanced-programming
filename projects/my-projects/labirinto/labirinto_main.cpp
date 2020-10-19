@@ -114,7 +114,11 @@ int main(void)
         }
         else
         {
-          cout << "Nao existe caminho..." << endl;
+          cout << "Nao existe caminho..." << endl
+               << "  Comprimento=" << comprCaminho
+               << "  Profundidade=" << profCaminho
+               << endl;
+
         }
         cout << "Num de nos em fechado=" << numF
              << "  Num de nos em aberto=" << numA

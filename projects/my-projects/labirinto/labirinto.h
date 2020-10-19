@@ -90,6 +90,7 @@ public:
 
   // Calcula o custo futuro de um Noh ateh o destino
   void heuristica(const Coord& Dest);
+  double custo(const Coord &C);
 
   friend ostream& operator<<(ostream& O, const Noh& N);
   friend class Labirinto;

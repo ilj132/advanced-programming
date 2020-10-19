@@ -380,8 +380,108 @@ double Labirinto::calculaCaminho(int& NC, int& NA, int& NF)
   ////////////////////////////
   //////// FALTA FAZER ///////
   ////////////////////////////
+  list <Noh> Aberto;
+  list <Noh>::iterator oldA;
+  list <Noh> Fechado;
+  list <Noh>::iterator oldF;
 
+
+  Noh atual;
+  Coord dest2;
+
+  atual.pos = orig;
+  atual.ant = Coord(NULL,NULL);
+  atual.g = 0.0;
+  atual.heuristica(dest);
+
+  Aberto.push_front(atual);
+
+  do{
+    atual = *Aberto.begin();
+    Aberto.erase(Aberto.begin());
+    Fechado.push_front(atual);
+
+    if(!(atual.pos == dest)){
+        Coord dir;
+        for(int i=atual.pos.lin -1; i!=atual.pos.lin+1; i++){
+            for(int j=atual.pos.col-1; j!=atual.pos.col+1; j++){
+
+                dir.lin=i;
+                dir.col=j;
+
+                if(dir.lin!=0 && dir.col!=0){
+
+                    dest2= atual.pos + dir;
+
+                    if(movimentoValido(atual.pos,dest)){
+                        Noh suc;
+                        suc.pos = dest2;
+                        suc.ant = atual.pos;
+                        suc.g = atual.g + atual.custo(dir);
+                        suc.heuristica(dest2);
+
+                        oldF = find( Fechado.begin(), Fechado.end(), suc.pos);
+                        if(oldF!=Fechado.end()){
+
+                            if(suc<*oldF){
+                                Fechado.erase(oldF);
+                                oldF= find(Fechado.begin(),Fechado.end(), suc.pos);
+                            }
+
+                        }
+
+                         oldA = find( Aberto.begin(), Aberto.end(), suc.pos);
+                         if(oldA!=Aberto.end()){
+
+                             if(suc<*oldA){
+                                Aberto.erase(oldA);
+                                oldA = Aberto.end();
+                            }
+
+                        }
+
+
+                        if(oldA==Aberto.end() && oldF==Fechado.end()){
+                            Aberto.push_front(suc);
+                            Aberto.sort();
+                        }
+                    }
+                }
+            }
+        }
+    }
+  }while(!(atual.pos == dest) && !(Aberto.empty()));
+
+    NA=Aberto.size();
+    NF=Fechado.size();
   // Erro no calculo do caminho
-  NC = NA = NF = -1;
-  return -1.0;
+  if(!(atual.pos==dest)){
+    NC = NA = NF = -1;
+    return -1.0;
+  }
+  else{
+    list<Noh>::iterator k;
+    NC=1;
+    while(atual.ant!=orig){
+        set(atual.ant)=EstadoCel::CAMINHO;
+        k=find(Fechado.begin(),Fechado.end(),atual.ant);
+        atual= *k;
+        NC++;
+    }
+    return atual.g;
+  }
+
+
+  /*NC = NA = NF = -1;
+  return -1.0;*/
 }
+
+double Noh::custo(const Coord &dir){
+    if(pos.lin==dir.lin && pos.col == dir.col ){
+        return 1;
+    }
+
+    return sqrt(2);
+
+}
+
